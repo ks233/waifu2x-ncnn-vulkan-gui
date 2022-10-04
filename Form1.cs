@@ -23,7 +23,14 @@ namespace waifu2x_ncnn_vulkan_gui
         {
             try
             {
-                pictureBox1.Image = Image.FromStream(new MemoryStream(File.ReadAllBytes(filepath)));
+                if (Path.GetExtension(filepath).ToLower() != ".webp") // webp可以作为输入，但不能用PictureBox显示
+                {
+                    pictureBox1.Image = Image.FromStream(new MemoryStream(File.ReadAllBytes(filepath)));
+                }
+                else
+                {
+                    pictureBox1.Image = null;
+                }
                 txtInputPath.Text = filepath;
             }
             catch (Exception exception)
@@ -75,7 +82,7 @@ namespace waifu2x_ncnn_vulkan_gui
                 }
                 if (File.Exists("waifu2x-ncnn-vulkan.exe"))
                 {
-                    System.Diagnostics.Process.Start("./waifu2x-ncnn-vulkan.exe", $" -v -i {inputpath} -o {sfd.FileName} -n {cbDenoise.Text} -s {cbScale.Text} -f {format}");
+                    System.Diagnostics.Process.Start("./waifu2x-ncnn-vulkan.exe", $" -v -i \"{inputpath}\" -o \"{sfd.FileName}\" -n {cbDenoise.Text} -s {cbScale.Text} -f {format}");
                 }
                 else{
                     MessageBox.Show("找不到waifu2x-ncnn-vulkan.exe");
